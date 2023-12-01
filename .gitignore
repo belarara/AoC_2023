@@ -1,0 +1,13 @@
+Pipfile.lock
+*.ignore
+*.ignore.py
+*.test
+*.old
+.vscode
+*_test.py
+output
+*.gv
+*.pdf
+*.txt
+out/*
+*_test
