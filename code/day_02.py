@@ -1,4 +1,6 @@
-from functools import reduce
+import time
+start_time = time.time()
+
 with open("inputs/day_02", "r") as f:
     data = f.read()
 
@@ -8,6 +10,7 @@ for l in data.split("\n"):
     game, sets = l.split(":")
     _, game = game.split(" ")
     dc[game] = {}
+    if len(sets) < 3: continue
     sets = sets.split(";")
     for s in sets:
         colors = s.split(",")
@@ -22,7 +25,7 @@ possible, s = {"red": 12, "green": 13, "blue": 14}, 0
 for g, d in dc.items():
     p = True
     for k,v in possible.items():
-        if d[k] > possible[k]:
+        if k in d and d[k] > possible[k]:
             p = False
     if p:
         s += int(g)
@@ -30,5 +33,6 @@ print(f"1) {s}")
 
 s2 = 0
 for d in dc.values():
-    s2 += reduce(lambda x, y: x*y, d.values())
+    s2 += (0 if "red" not in d else d["red"]) * (0 if "blue" not in d else d["blue"]) * (0 if "green" not in d else d["green"])
 print(f"2) {s2}")
+print(f"time: {time.time() - start_time}s")
