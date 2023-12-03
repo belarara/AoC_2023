@@ -1,7 +1,7 @@
 import time
 start_time = time.time()
 
-with open("inputs/day_02", "r") as f:
+with open("inputs/day_02.txt", "r") as f:
     data = f.read()
 
 dc = {}

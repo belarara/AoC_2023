@@ -1,4 +1,4 @@
-with open("inputs/day_01", "r") as f:
+with open("inputs/day_01.txt", "r") as f:
     data = f.read()
 
 fdg = {"one":1, "two":2, "three":3, "four":4, "five":5, "six":6, "seven":7, "eight":8, "nine":9}
