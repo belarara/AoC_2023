@@ -33,7 +33,7 @@ for i, row in enumerate(data):
 
 s = 0
 for k,v in dct.items():
-    adj = {(x,y) for a,b in v for x,y in get_adjacent(a,b) if (x,y) and (x,y) not in v}
+    adj = {(x,y) for a,b in v for x,y in get_adjacent(a,b) if (x,y) not in v}
     symbols = ""
     for x,y in adj:
         ns = get_index(data, x, y)
@@ -44,7 +44,7 @@ print(f"1) {s}")
 
 s2, gears = 0, {}
 for k,v in dct.items():
-    adj = {(x,y) for a,b in v for x,y in get_adjacent(a,b) if (x,y) and (x,y) not in v}
+    adj = {(x,y) for a,b in v for x,y in get_adjacent(a,b) if (x,y) not in v}
     for x,y in adj:
         if get_index(data, x, y) == "*":
             if (x,y) not in gears:
