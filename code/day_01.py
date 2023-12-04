@@ -11,8 +11,9 @@ def find_first_digit(s, rng, only_digit=True):
                 if s[i:].startswith(k):
                     return v
 
-# part 1
-print(f"1) {sum([find_first_digit(l, range(len(l)))*10 + find_first_digit(l, range(len(l)-1, -1, -1)) for l in data.split("\n")])}")
+p1 = [find_first_digit(l, range(len(l)))*10 + find_first_digit(l, range(len(l)-1, -1, -1)) for l in data.split("\n") if l!=""]
+print(f"1) {sum(p1)}")
 
 # part 2
-print(f"2) {sum([find_first_digit(l, range(len(l)), False)*10 + find_first_digit(l, range(len(l)-1, -1, -1), False) for l in data.split("\n")])}")
+p2 = [find_first_digit(l, range(len(l)), False)*10 + find_first_digit(l, range(len(l)-1, -1, -1), False) for l in data.split("\n") if l!=""]
+print(f"2) {sum(p2)}")
