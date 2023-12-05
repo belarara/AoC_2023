@@ -25,22 +25,18 @@ for s in seeds:
     conv_seeds.append(c)
 print(f"1) {min(conv_seeds)}")
 
-def overlap(min1,max1,min2,max2):
-    if min1>max2 or min2>max1: return (-1,-1)
-    return (max(min1,min2), min(max1,max2))
-
 seed_ranges = []
 for i in range(0, len(seeds), 2):
     seed_ranges.append((seeds[i], seeds[i]+seeds[i+1]-1))
-for i, key in enumerate(keys):
+for key in keys:
     new_range = []
     while len(seed_ranges)>0:
         seed_min, seed_max = seed_ranges.pop()
         ol = False
         for j, source in enumerate(dct[key]["source"]):
             source_min, source_max = source, source + dct[key]["range"][j]-1
-            overlap_min,overlap_max = overlap(seed_min, seed_max, source_min, source_max)
-            if (overlap_min,overlap_max) != (-1,-1):
+            overlap_min, overlap_max = max(seed_min, source_min), min(seed_max, source_max)
+            if overlap_min <= overlap_max:
                 ol = True
                 if seed_min<overlap_min: seed_ranges.append((seed_min, overlap_min-1))
                 if overlap_max<seed_max: seed_ranges.append((overlap_max+1, seed_max))
