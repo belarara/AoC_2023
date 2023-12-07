@@ -1,4 +1,4 @@
-import time, numpy
+import time
 start_time = time.time()
 
 with open("inputs/day_07.txt", "r") as f:
