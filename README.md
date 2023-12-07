@@ -5,3 +5,4 @@
 - Day 04 - done
 - Day 05 - done
 - Day 06 - done
+- Day 07 - done
