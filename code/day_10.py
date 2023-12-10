@@ -51,5 +51,5 @@ while x!=row or y!=col:
 
 pipe.add((row,col))
 fields_left, f1 = expand(left, pipe)
-print(f"2) {len(fields_left if not f1 else expand(right, pipe)[0])}")
+print(f"2) {len(fields_left) if not f1 else (xmax+1)*(ymax+1)-len(pipe.union(fields_left))}")
 print(f"time: {time.time() - start_time}s")
