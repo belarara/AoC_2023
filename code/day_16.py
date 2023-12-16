@@ -12,9 +12,10 @@ change = {
     "|": {0:{0},2:{2},1:{0,2},3:{0,2}}, 
     ".": {0:{0},1:{1},2:{2},3:{3}}
 }
+xchange, ychange = {0:-1,1:0,2:1,3:0}, {0:0,1:1,2:0,3:-1}
 
 def move(x, y, vel):
-    return x+{0:-1,1:0,2:1,3:0}[vel], y+{0:0,1:1,2:0,3:-1}[vel]
+    return x+xchange[vel], y+ychange[vel]
 
 def new_vel(data, x, y, vel):
     return change[data[x][y]][vel]
@@ -22,7 +23,7 @@ def new_vel(data, x, y, vel):
 def energize(data, q):
     cache = np.zeros((len(data), len(data[0]), 4),dtype=bool)
     while len(q)>0:
-        cx,cy,cv = q.pop()
+        cx,cy,cv = q.pop(-1)
         if cache[cx,cy,cv]:
             continue
         cache[cx,cy,cv] = True
@@ -40,4 +41,5 @@ print(f"1) {get_energized(energize(data, [(0,0,1)]))}")
 starts = [(0, y, 2) for y in range(len(data[0]))] + [(len(data)-1, y, 0) for y in range(len(data[0]))]
 starts += [(x, 0, 1) for x in range(len(data))] + [(x, len(data[0])-1, 3) for x in range(len(data))]
 print(f"2) {max([get_energized(energize(data, [(x,y,v)])) for x,y,v in starts])}")
+
 print(f"time: {time.time() - start_time}s")
