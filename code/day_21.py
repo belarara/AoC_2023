@@ -1,5 +1,4 @@
 import time
-import numpy as np
 start_time = time.time()
 
 with open("inputs/day_21.txt", "r") as f:
@@ -9,10 +8,11 @@ d = {0:(-1,0),1:(0,1),2:(1,0),3:(0,-1)}
 next = lambda x,y: [(x+dx, y+dy) for dx,dy in d.values()]
 valid = lambda ar,x,y: x>=0 and x<len(ar) and y>=0 and y<len(ar[0])
 
-ds = np.array([[a!="#" for a in line] for line in data])
+ds = [[a!="#" for a in line] for line in data]
 lookup = {}
-for (x,y) in np.ndindex(ds.shape):
-    lookup[(x,y)] = set((nx,ny) for nx,ny in next(x,y) if valid(ds, nx, ny) and ds[nx,ny])
+for x in range(len(data)):
+    for y in range(len(data[0])):
+        lookup[(x,y)] = set((nx,ny) for nx,ny in next(x,y) if valid(ds, nx, ny) and ds[nx][ny])
 
 def get_reachable(starts,end=200):
     reachable = {0:starts}
@@ -23,7 +23,7 @@ def get_reachable(starts,end=200):
                 reachable[i].add(o)
     return reachable
 
-xmax,ymax = ds.shape
+xmax,ymax = len(ds), len(ds[0])
 center = (xmax//2,ymax//2)
 print(f"1) {len(get_reachable({center}, 64)[64])}")
 
