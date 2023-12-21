@@ -2,52 +2,52 @@ import time
 import numpy as np
 start_time = time.time()
 
-with open("inputs/day_21t.txt", "r") as f:
+with open("inputs/day_21.txt", "r") as f:
     data = [l for l in f.read().split("\n") if len(l)>0]
 
-def valid(ar, x, y):
-    return x>=0 and x<len(ar) and y>=0 and y<len(ar[0])
-
-def next(ar, x, y):
-    return [(x+dx, y+dy) for dx,dy in d.values()]
-
 d = {0:(-1,0),1:(0,1),2:(1,0),3:(0,-1)}
+next = lambda x,y: [(x+dx, y+dy) for dx,dy in d.values()]
+valid = lambda ar,x,y: x>=0 and x<len(ar) and y>=0 and y<len(ar[0])
+
 ds = np.array([[a!="#" for a in line] for line in data])
-lookup = {(x,y):{(a,b) for a,b in [(x+nx,y+ny) for nx,ny in d.values()] if valid(ds,a,b) and ds[a,b]} for (x,y) in np.ndindex(ds.shape)}
+lookup = {}
+for (x,y) in np.ndindex(ds.shape):
+    lookup[(x,y)] = set((nx,ny) for nx,ny in next(x,y) if valid(ds, nx, ny) and ds[nx,ny])
 
-reachable = {0:{(x,y) for x in range(len(data)) for y in range(len(data[0])) if data[x][y] == "S"}}
-for i in range(1,200):
-    reachable[i] = []
-    new = set()
-    for x,y in reachable[i-1]:
-        for o in lookup[(x,y)]:
-            new.add(o)
-    reachable[i] = new
-    if i>1 and len(reachable[i]-reachable[i-2])==0:
-        break
+def get_reachable(starts,end=200):
+    reachable = {0:starts}
+    for i in range(1,end+1):
+        reachable[i] = set()
+        for x,y in reachable[i-1]:
+            for o in lookup[(x,y)]:
+                reachable[i].add(o)
+    return reachable
 
-def prt(ar, lst):
-    ax = [list(l) for l in ar]
-    for (x,y) in lst:
-        ax[x][y] = "O"
-    for l in ax:
-        print("".join(l))
-        
-#for i in range(7):
-#    print()
-#    print(i)
-#    prt(data, reachable[i])
-print(f"1) {1 if 64 not in reachable else len(reachable[64])}")
+xmax,ymax = ds.shape
+center = (xmax//2,ymax//2)
+print(f"1) {len(get_reachable({center}, 64)[64])}")
 
-xs = [(ds.shape[0]//2,0),(ds.shape[0]//2,ds.shape[1]-1)]
-ys = [(0,ds.shape[1]//2),(ds.shape[0]-1,ds.shape[1]//2)]
-prt(data, xs+ys)
+steps = 26501365
+sq_radius = (steps-xmax) // xmax
+tips = [(xmax//2,0),(xmax//2,ymax-1),(0,ymax//2),(xmax-1,ymax//2)]
+corners = [(0,0),(0,ymax-1),(xmax-1,0),(xmax-1,ymax-1)]
 
-edges = [{(0,64)}, {(64,0)}, {(128,64)}, {(128,64)}]
-al = zip(edges)
+sq_even_row, sq_odd_row = sq_radius//2+1, sq_radius//2
+sq_radius_half = sq_radius//2
+sq_odd = 1 + 4*sq_odd_row*(sq_odd_row+1) # (1 center square) + (gauss sum * 8)
+sq_even = 4*sq_even_row*(sq_even_row+1) - 4*sq_even_row # (gauss sum * 8) - (4*n because start at 4)
+# full squares
+r = get_reachable({center}, xmax+1)
+even_max, odd_max = len(r[xmax+1]), len(r[xmax])
+full_sq_sum = even_max*sq_even + odd_max*sq_odd
+# tips
+tips_length = steps - sq_radius*xmax - xmax//2 - 1
+tips_sum = sum([len(get_reachable({s}, tips_length)[tips_length]) for s in tips])
+# corners
+high, low = 3*xmax//2 - 1, xmax//2 - 1
+corners_reach = [get_reachable({s}, max(low,high)) for s in corners]
+low_sum = sum([len(r[low]) for r in corners_reach]) * (sq_radius+1)
+high_sum = sum([len(r[high]) for r in corners_reach]) * sq_radius
 
-print(i,len(reachable[i]), len(reachable[i-1]), len(reachable[i-2]), len(reachable[i-3]))
-#prt(data, {(0,64), (64,0), (128,64), (128,64)})
-
-print(f"2) {2}")
+print(f"2) {full_sq_sum + tips_sum + low_sum + high_sum}")
 print(f"time: {time.time() - start_time}s")
