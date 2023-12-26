@@ -37,7 +37,7 @@ for line in data:
         E.add((v1,v2))
 V = get_vertices(E)
 
-# find two vertices connected by at most 2 paths
+# find two vertices connected by at most 3 paths
 brk = False
 v1 = V[0]
 for v2 in V[1:]:
